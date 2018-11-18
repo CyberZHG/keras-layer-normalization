@@ -37,6 +37,29 @@ class TestLayerNormalization(unittest.TestCase):
             [0.0, -1.22474487, 1.22474487],
             [1.41421356, -0.707106781, -0.707106781],
         ]])
+        self.assertTrue(np.allclose(expected, predict), predict)
+
+        input_layer = keras.layers.Input(
+            shape=(10, 256),
+            name='Input',
+        )
+        norm_layer = LayerNormalization(
+            name='Layer-Normalization',
+            beta_initializer='ones',
+        )(input_layer)
+        model = keras.models.Model(
+            inputs=input_layer,
+            outputs=norm_layer,
+        )
+        model.compile(
+            optimizer='adam',
+            loss='mse',
+            metrics={},
+        )
+        model.summary()
+        inputs = np.zeros((2, 10, 256))
+        predict = model.predict(inputs)
+        expected = np.ones((2, 10, 256))
         self.assertTrue(np.allclose(expected, predict))
 
     def test_fit(self):
@@ -47,14 +70,18 @@ class TestLayerNormalization(unittest.TestCase):
             shape=(2, 3),
             name='Input',
         )
+        norm_layer = LayerNormalization(
+            name='Layer-Normalization-1',
+            trainable=False,
+        )(input_layer)
         att_layer = MultiHeadAttention(
             head_num=3,
             activation=_leaky_relu,
             name='Multi-Head-Attentions'
-        )(input_layer)
+        )(norm_layer)
         dense_layer = keras.layers.Dense(units=3, name='Dense-1')(att_layer)
         norm_layer = LayerNormalization(
-            name='Layer-Normalization',
+            name='Layer-Normalization-2',
             trainable=False,
         )(dense_layer)
         dense_layer = keras.layers.Dense(units=3, name='Dense-2')(norm_layer)
