@@ -84,7 +84,7 @@ class LayerNormalization(keras.layers.Layer):
     def call(self, inputs, training=None):
         mean = K.mean(inputs, axis=-1, keepdims=True)
         variance = K.mean(K.square(inputs - mean), axis=-1, keepdims=True)
-        std = K.sqrt(variance + K.epsilon())
+        std = K.sqrt(variance + K.epsilon() * K.epsilon())
         outputs = (inputs - mean) / std
         if self.scale:
             outputs *= self.gamma
