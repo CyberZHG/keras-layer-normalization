@@ -125,3 +125,60 @@ class TestLayerNormalization(unittest.TestCase):
             actual = np.round(predicts, decimals=1)
             self.assertTrue(np.allclose(expect, actual), (expect, actual))
             break
+
+    def test_fit_zeros(self):
+        def _leaky_relu(x):
+            return keras.activations.relu(x, alpha=0.01)
+
+        input_layer = keras.layers.Input(
+            shape=(2, 3),
+            name='Input',
+        )
+        norm_layer = LayerNormalization(
+            name='Layer-Normalization-1',
+            trainable=False,
+        )(input_layer)
+        att_layer = MultiHeadAttention(
+            head_num=3,
+            activation=_leaky_relu,
+            name='Multi-Head-Attentions'
+        )(norm_layer)
+        dense_layer = keras.layers.Dense(units=3, name='Dense-1')(att_layer)
+        norm_layer = LayerNormalization(
+            name='Layer-Normalization-2',
+            trainable=False,
+        )(dense_layer)
+        dense_layer = keras.layers.Dense(units=3, name='Dense-2')(norm_layer)
+        model = keras.models.Model(
+            inputs=input_layer,
+            outputs=dense_layer,
+        )
+        model.compile(
+            optimizer=keras.optimizers.Adam(lr=1e-3),
+            loss='mse',
+            metrics={},
+        )
+        model.summary()
+
+        def _generator_zeros(batch_size=32):
+            while True:
+                batch_inputs = np.zeros((batch_size, 2, 3))
+                batch_outputs = np.asarray([[[0.0, -0.1, 0.2]] * 2] * batch_size)
+                yield batch_inputs, batch_outputs
+
+        model.fit_generator(
+            generator=_generator_zeros(),
+            steps_per_epoch=1000,
+            epochs=10,
+            validation_data=_generator_zeros(),
+            validation_steps=100,
+            callbacks=[
+                keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
+            ],
+        )
+        for inputs, _ in _generator_zeros(batch_size=3):
+            predicts = model.predict(inputs)
+            expect = np.round(np.asarray([[[0.0, -0.1, 0.2]] * 2] * 3), decimals=1)
+            actual = np.round(predicts, decimals=1)
+            self.assertTrue(np.allclose(expect, actual), (expect, actual))
+            break
