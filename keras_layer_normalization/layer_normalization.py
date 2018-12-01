@@ -7,6 +7,7 @@ class LayerNormalization(keras.layers.Layer):
     def __init__(self,
                  center=True,
                  scale=True,
+                 epsilon=None,
                  gamma_initializer='ones',
                  beta_initializer='zeros',
                  gamma_regularizer=None,
@@ -20,6 +21,7 @@ class LayerNormalization(keras.layers.Layer):
 
         :param center: If True, add offset of `beta` to normalized tensor. If False, `beta` is ignored.
         :param scale: If True, multiply by `gamma`. If False, `gamma` is not used.
+        :param epsilon: Epsilon for variance.
         :param gamma_initializer: Initializer for the gamma weight.
         :param beta_initializer: Initializer for the beta weight.
         :param gamma_regularizer: Optional regularizer for the gamma weight.
@@ -32,6 +34,9 @@ class LayerNormalization(keras.layers.Layer):
         self.supports_masking = True
         self.center = center
         self.scale = scale
+        if epsilon is None:
+            epsilon = K.epsilon() * K.epsilon()
+        self.epsilon = epsilon
         self.gamma_initializer = keras.initializers.get(gamma_initializer)
         self.beta_initializer = keras.initializers.get(beta_initializer)
         self.gamma_regularizer = keras.regularizers.get(gamma_regularizer)
@@ -44,6 +49,7 @@ class LayerNormalization(keras.layers.Layer):
         config = {
             'center': self.center,
             'scale': self.scale,
+            'epsilon': self.epsilon,
             'gamma_initializer': self.gamma_initializer,
             'beta_initializer': self.beta_initializer,
             'gamma_regularizer': self.gamma_regularizer,
@@ -84,7 +90,7 @@ class LayerNormalization(keras.layers.Layer):
     def call(self, inputs, training=None):
         mean = K.mean(inputs, axis=-1, keepdims=True)
         variance = K.mean(K.square(inputs - mean), axis=-1, keepdims=True)
-        std = K.sqrt(variance + K.epsilon() * K.epsilon())
+        std = K.sqrt(variance + self.epsilon)
         outputs = (inputs - mean) / std
         if self.scale:
             outputs *= self.gamma

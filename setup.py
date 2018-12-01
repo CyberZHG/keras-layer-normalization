@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='keras-layer-normalization',
-    version='0.5.0',
+    version='0.6.0',
     packages=find_packages(),
     url='https://github.com/CyberZHG/keras-layer-normalization',
     license='MIT',
