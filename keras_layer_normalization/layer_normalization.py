@@ -50,12 +50,12 @@ class LayerNormalization(keras.layers.Layer):
             'center': self.center,
             'scale': self.scale,
             'epsilon': self.epsilon,
-            'gamma_initializer': self.gamma_initializer,
-            'beta_initializer': self.beta_initializer,
-            'gamma_regularizer': self.gamma_regularizer,
-            'beta_regularizer': self.beta_regularizer,
-            'gamma_constraint': self.gamma_constraint,
-            'beta_constraint': self.beta_constraint,
+            'gamma_initializer': keras.initializers.serialize(self.gamma_initializer),
+            'beta_initializer': keras.initializers.serialize(self.beta_initializer),
+            'gamma_regularizer': keras.regularizers.serialize(self.gamma_regularizer),
+            'beta_regularizer': keras.regularizers.serialize(self.beta_regularizer),
+            'gamma_constraint': keras.constraints.serialize(self.gamma_constraint),
+            'beta_constraint': keras.constraints.serialize(self.beta_constraint),
         }
         base_config = super(LayerNormalization, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))

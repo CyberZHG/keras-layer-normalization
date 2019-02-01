@@ -182,3 +182,11 @@ class TestLayerNormalization(unittest.TestCase):
             actual = np.round(predicts, decimals=1)
             self.assertTrue(np.allclose(expect, actual), (expect, actual))
             break
+
+    def test_save_load_json(self):
+        model = keras.models.Sequential()
+        model.add(LayerNormalization())
+        model.build(input_shape=(2, 3))
+        encoded = model.to_json()
+        model = keras.models.model_from_json(encoded, custom_objects={'LayerNormalization': LayerNormalization})
+        model.summary()
