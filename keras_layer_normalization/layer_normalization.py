@@ -19,9 +19,9 @@ class LayerNormalization(keras.layers.Layer):
 
         See: [Layer Normalization](https://arxiv.org/pdf/1607.06450.pdf)
 
-        :param center: If True, add offset of `beta` to normalized tensor. If False, `beta` is ignored.
-        :param scale: If True, multiply by `gamma`. If False, `gamma` is not used.
-        :param epsilon: Epsilon for variance.
+        :param center: Add an offset parameter if it is True.
+        :param scale: Add a scale parameter if it is True.
+        :param epsilon: Epsilon for calculating variance.
         :param gamma_initializer: Initializer for the gamma weight.
         :param beta_initializer: Initializer for the beta weight.
         :param gamma_regularizer: Optional regularizer for the gamma weight.
