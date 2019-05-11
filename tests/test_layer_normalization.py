@@ -1,10 +1,9 @@
 import os
 import tempfile
-import random
 import unittest
-import keras
 import numpy as np
 from keras_multi_head import MultiHeadAttention
+from keras_layer_normalization.backend import keras
 from keras_layer_normalization import LayerNormalization
 
 
@@ -112,7 +111,7 @@ class TestLayerNormalization(unittest.TestCase):
                 keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
             ],
         )
-        model_path = os.path.join(tempfile.gettempdir(), 'test_layer_normalization_%f.h5' % random.random())
+        model_path = os.path.join(tempfile.gettempdir(), 'test_layer_normalization_%f.h5' % np.random.random())
         model.save(model_path)
         model = keras.models.load_model(model_path, custom_objects={
             '_leaky_relu': _leaky_relu,
@@ -185,8 +184,8 @@ class TestLayerNormalization(unittest.TestCase):
 
     def test_save_load_json(self):
         model = keras.models.Sequential()
-        model.add(LayerNormalization())
-        model.build(input_shape=(2, 3))
+        model.add(LayerNormalization(input_shape=(2, 3)))
+        model.compile(optimizer='adam', loss='mse')
         encoded = model.to_json()
         model = keras.models.model_from_json(encoded, custom_objects={'LayerNormalization': LayerNormalization})
         model.summary()
