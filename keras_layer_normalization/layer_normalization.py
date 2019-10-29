@@ -67,7 +67,6 @@ class LayerNormalization(keras.layers.Layer):
         return input_mask
 
     def build(self, input_shape):
-        self.input_spec = keras.engine.InputSpec(shape=input_shape)
         shape = input_shape[-1:]
         if self.scale:
             self.gamma = self.add_weight(
