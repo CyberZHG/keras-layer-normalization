@@ -2,6 +2,13 @@
 
 [![Travis](https://travis-ci.org/CyberZHG/keras-layer-normalization.svg)](https://travis-ci.org/CyberZHG/keras-layer-normalization)
 [![Coverage](https://coveralls.io/repos/github/CyberZHG/keras-layer-normalization/badge.svg?branch=master)](https://coveralls.io/github/CyberZHG/keras-layer-normalization)
+[![Version](https://img.shields.io/pypi/v/keras-layer-normalization.svg)](https://pypi.org/project/keras-layer-normalization/)
+![Downloads](https://img.shields.io/pypi/dm/keras-layer-normalization.svg)
+![License](https://img.shields.io/pypi/l/keras-layer-normalization.svg)
+
+![](https://img.shields.io/badge/keras-tensorflow-blue.svg)
+![](https://img.shields.io/badge/keras-tf.keras-blue.svg)
+
 
 Implementation of the paper: [Layer Normalization](https://arxiv.org/pdf/1607.06450.pdf)
 
