@@ -26,7 +26,7 @@ def find_version(*file_paths):
 
 setup(
     name='keras-layer-normalization',
-    version=find_version('keras_bert', '__init__.py'),
+    version=find_version('keras_layer_normalization', '__init__.py'),
     packages=find_packages(),
     url='https://github.com/CyberZHG/keras-layer-normalization',
     license='MIT',
