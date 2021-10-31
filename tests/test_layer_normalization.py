@@ -2,6 +2,7 @@ import os
 import tempfile
 import unittest
 import numpy as np
+import tensorflow as tf
 from keras_multi_head import MultiHeadAttention
 from keras_layer_normalization.backend import keras
 from keras_layer_normalization import LayerNormalization
@@ -89,7 +90,7 @@ class TestLayerNormalization(unittest.TestCase):
             outputs=dense_layer,
         )
         model.compile(
-            optimizer=keras.optimizers.Adam(lr=1e-3),
+            optimizer=tf.keras.optimizers.Adam(lr=1e-3),
             loss='mse',
             metrics={},
         )
@@ -153,7 +154,7 @@ class TestLayerNormalization(unittest.TestCase):
             outputs=dense_layer,
         )
         model.compile(
-            optimizer=keras.optimizers.Adam(lr=1e-3),
+            optimizer=tf.keras.optimizers.Adam(lr=1e-3),
             loss='mse',
             metrics={},
         )
