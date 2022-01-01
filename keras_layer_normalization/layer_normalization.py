@@ -1,5 +1,7 @@
-from .backend import keras
-from .backend import backend as K
+from tensorflow import keras
+from tensorflow.keras import backend as K
+
+__all__ = ['LayerNormalization']
 
 
 class LayerNormalization(keras.layers.Layer):

@@ -1,9 +1,11 @@
 import os
 import tempfile
 import unittest
+
 import numpy as np
+from tensorflow import keras
+
 from keras_multi_head import MultiHeadAttention
-from keras_layer_normalization.backend import keras
 from keras_layer_normalization import LayerNormalization
 
 
@@ -103,12 +105,12 @@ class TestLayerNormalization(unittest.TestCase):
 
         model.fit_generator(
             generator=_generator(),
-            steps_per_epoch=1000,
-            epochs=10,
+            steps_per_epoch=100,
+            epochs=100,
             validation_data=_generator(),
             validation_steps=100,
             callbacks=[
-                keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
+                keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, min_delta=1e-4)
             ],
         )
         model_path = os.path.join(tempfile.gettempdir(), 'test_layer_normalization_%f.h5' % np.random.random())
@@ -167,12 +169,12 @@ class TestLayerNormalization(unittest.TestCase):
 
         model.fit_generator(
             generator=_generator_zeros(),
-            steps_per_epoch=1000,
-            epochs=10,
+            steps_per_epoch=100,
+            epochs=100,
             validation_data=_generator_zeros(),
             validation_steps=100,
             callbacks=[
-                keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
+                keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, min_delta=1e-4)
             ],
         )
         for inputs, _ in _generator_zeros(batch_size=3):

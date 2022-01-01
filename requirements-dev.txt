@@ -5,4 +5,4 @@ nose
 tensorflow
 pycodestyle
 coverage
-keras-multi-head>=0.28.0
+keras-multi-head==0.29.0
